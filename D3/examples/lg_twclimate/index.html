@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+  <meta charset="UTF-8">
+  <title>Ladder graph of Taiwan Climate</title>
+  <link rel="stylesheet" href="style.css" /> <!-- css file in same folder -->
+</head>
+<body>
+
+  <div class="js-laddergraph laddergraph"></div>
+
+  <h1 class="chart-title">
+  <a href="https://www.cwb.gov.tw/V7e/climate/">Taiwan climate </a>
+  </h1>
+
+  <script src="https://d3js.org/d3.v4.min.js"></script> <!--  load JavaScript library from absolute address -->
+  <script src="laddergraph.js"></script> <!-- laddergraph JavaScript  -->
+
+  <script>
+    'use strict';
+
+    (function() {
+
+      d3.json('taiwanclimate.json', function(error, data) {
+        if (error) {
+          throw error;
+        };
+
+        var laddergraph = charts.laddergraph()
+                          .leftKey1('Temperature')
+                          .leftKey2('Humidity')
+                          .leftKey2Orientation('inverted')
+                          .rightKey('dayrain')
+                          .tooltipFormat(function(d) {
+                            var text = '<strong>' + d.Station + ' </strong>';
+                            text += '<dl>';
+                            text += '<dt>Temperature</dt><dd>' + d['Temperature'] + '&#176;C</dd>';
+                            text += '<dt>Humidity</dt><dd>' + d['Humidity'] + '</dd>';
+                            text += '<dt>dayrain</dt><dd>' + d['dayrain'] + '</dd>';
+                            text += '</dl>';
+                            return text;
+                          });
+
+        d3.select('.js-laddergraph')
+            .datum(data)
+            .call(laddergraph);
+      });
+
+    })();
+
+  </script>
+
+</body>
+</html>
